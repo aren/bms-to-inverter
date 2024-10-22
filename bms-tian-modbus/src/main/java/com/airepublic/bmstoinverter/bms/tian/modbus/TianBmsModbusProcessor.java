@@ -40,7 +40,7 @@ public class TianBmsModbusProcessor extends BMS {
     @Override
     protected void collectData(final Port port) {
         try {
-            sendMessage(port, RegisterCode.READ_HOLDING_REGISTERS, 0x1000, 0x17, getBmsId(), this::readBatteryData);
+            sendMessage(port, RegisterCode.READ_INPUT_REGISTERS, 0x1000, 0x17, getBmsId(), this::readBatteryData);
         } catch (final IOException e) {
             LOG.error("Error reading from modbus!", e);
         }
@@ -57,6 +57,9 @@ public class TianBmsModbusProcessor extends BMS {
         frame.getInt(); // functionCode
         frame.getInt(); // numRegisters
         final int unitId = frame.getInt();
+
+        // the following line returns null, so just exit for now
+        if (true) return;
         final BatteryPack pack = energyStorage.getBatteryPack(unitId);
 
         // pack voltage 0.01V

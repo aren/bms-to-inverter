@@ -131,7 +131,7 @@ public class J2ModMasterPort extends ModBusPort {
 
     private void readInputRegisters(final ByteBuffer frame) throws IOException {
         // Modbus register addresses are 1-based, so subtract 1 for the j2mod library
-        final int startAddress = frame.getInt() - 1;
+        final int startAddress = frame.getInt();
         final int numRegisters = frame.getInt();
         final int unitId = frame.getInt();
         ModbusSerialTransaction transaction = null;
@@ -145,6 +145,7 @@ public class J2ModMasterPort extends ModBusPort {
 
             // Prepare a transaction
             transaction = new ModbusSerialTransaction(request);
+            transaction.setSerialConnection(port.getConnection());
 
             transaction.setTransDelayMS(50);
             transaction.execute();
@@ -182,6 +183,7 @@ public class J2ModMasterPort extends ModBusPort {
 
             buffers.add(ModbusUtil.toBuffer(response));
         } catch (final Exception ex) {
+            LOG.error("Exception reading from modbus", ex);
             throw new IOException("Error reading from modbus device #" + unitId + "(address: " + startAddress + ", numRegisters: " + numRegisters + ")");
         }
     }

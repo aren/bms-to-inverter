@@ -56,7 +56,7 @@ public class ModbusUtil {
         buffer.putInt(startAddress);
         buffer.putInt(numRegisters);
         buffer.putInt(unitId);
-
+        buffer.rewind();
         return buffer;
     }
 
